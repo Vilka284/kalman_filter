@@ -1,5 +1,5 @@
 import numpy as np
-
+from parallel.exec import func_time
 
 class KalmanFilter(object):
 
@@ -19,6 +19,7 @@ class KalmanFilter(object):
         self.R = np.eye(self.b.shape[0])  # матриця шуму спостереження
         self.lastResult = np.array([[0], [255]])
 
+    @func_time
     def predict(self):
         """Передбачення вектору поточного стану u та дисперсії невизначеності P (коваріація)
             u: вектор попереднього стану
@@ -38,6 +39,7 @@ class KalmanFilter(object):
         self.lastResult = self.u
         return self.u
 
+    @func_time
     def correct(self, b, flag):
         """Виправлення прогнозованих значень вектору поточного стану u та дисперсії невизначеності P (коваріація)
             u: прогнозовані стани U

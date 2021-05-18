@@ -1,6 +1,5 @@
 import cv2
 from detectors import Detectors
-# import copy
 from tracker import Tracker
 from os import path
 
@@ -13,20 +12,18 @@ def main():
 
     cap = cv2.VideoCapture(video)
     detector = Detectors()
-    tracker = Tracker(60, 30, 100)
+    tracker = Tracker(60, 30, 100, False)
 
     while True:
         # Покадрово зчитуємо відео
         ret, frame = cap.read()
 
-        # orig_frame = copy.copy(frame)
-
         # Виявляємо центроїди на зображенні
-        centers = detector.Detect(frame)
+        centers = detector.detect(frame)
 
         if len(centers) > 0:
             # Відстежуємо об'єкт з допомогою фільтру Калмана
-            tracker.Update(centers)
+            tracker.update(centers)
 
         # cv2.imshow('Original', orig_frame)
 

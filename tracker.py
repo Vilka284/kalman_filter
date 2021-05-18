@@ -1,14 +1,18 @@
 import numpy as np
 from kalman_filter import KalmanFilter
+from parallel.kalman_filter_parallel import KalmanFilterParallel
 from scipy.optimize import linear_sum_assignment
 
 
 # Відстежуваний об'єкт
 class Track(object):
 
-    def __init__(self, prediction, trackIdCount):
+    def __init__(self, prediction, trackIdCount, parallel):
         self.track_id = trackIdCount  # номер кожного ідентифікованого об'єкта
-        self.KF = KalmanFilter()  # Фільтра Калмана для відстеження даного об'єкта
+        if parallel:
+            self.KF = KalmanFilter()  # Фільтра Калмана для відстеження даного об'єкта
+        else:
+            self.KF = KalmanFilterParallel()
         self.prediction = np.asarray(prediction)  # прогнозовані центроїди (x,y)
         self.skipped_frames = 0  # кількість пропущених кадрів
 
@@ -16,7 +20,7 @@ class Track(object):
 # Клас для відстежування векторів переміщення обєкта
 class Tracker(object):
 
-    def __init__(self, dist_thresh, max_frames_to_skip, trackIdCount):
+    def __init__(self, dist_thresh, max_frames_to_skip, trackIdCount, parallel: bool):
         self.dist_thresh = dist_thresh  # поріг відстані, якщо відстань більша ніж задана новий відстежуваний об'єкт
         # перестає відстежуватись та новий об'єкт створюється
 
@@ -25,8 +29,9 @@ class Tracker(object):
 
         self.tracks = []
         self.trackIdCount = trackIdCount
+        self.parallel = parallel
 
-    def Update(self, detected_centroids):
+    def update(self, detected_centroids):
         """Оновлюємо вектор переміщень:
             - Створюємо вектор переміщень якщо його немає
             - Рахуємо матрицю вартостей (для наступного кроку) використовуючи суму квадратів
@@ -42,7 +47,7 @@ class Tracker(object):
         # Створюємо вектор переміщень якщо його немає
         if len(self.tracks) == 0:
             for i in range(len(detected_centroids)):
-                track = Track(detected_centroids[i], self.trackIdCount)
+                track = Track(detected_centroids[i], self.trackIdCount, self.parallel)
                 self.trackIdCount += 1
                 self.tracks.append(track)
 
@@ -107,7 +112,8 @@ class Tracker(object):
         if len(un_assigned_detects) != 0:
             for i in range(len(un_assigned_detects)):
                 track = Track(detected_centroids[un_assigned_detects[i]],
-                              self.trackIdCount)
+                              self.trackIdCount,
+                              self.parallel)
                 self.trackIdCount += 1
                 self.tracks.append(track)
 
