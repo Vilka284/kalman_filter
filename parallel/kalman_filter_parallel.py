@@ -1,6 +1,7 @@
 import numpy as np
 from multiprocessing import Pool
 from exec import func_time
+from matrix_operations_parallel import dot
 
 
 class KalmanFilterParallel(object):
@@ -19,7 +20,7 @@ class KalmanFilterParallel(object):
 
     @func_time
     def predict(self):
-        self.u = np.round(np.dot(self.F, self.u))
+        self.u = np.round(dot(self.F, self.u))
         self.P = np.dot(self.F, np.dot(self.P, self.F.T)) + self.Q
         self.lastResult = self.u
         return self.u

@@ -1,6 +1,7 @@
 import numpy as np
 from parallel.exec import func_time
 
+
 class KalmanFilter(object):
 
     def __init__(self):

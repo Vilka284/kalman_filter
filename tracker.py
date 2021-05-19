@@ -9,7 +9,7 @@ class Track(object):
 
     def __init__(self, prediction, trackIdCount, parallel):
         self.track_id = trackIdCount  # номер кожного ідентифікованого об'єкта
-        if parallel:
+        if not parallel:
             self.KF = KalmanFilter()  # Фільтра Калмана для відстеження даного об'єкта
         else:
             self.KF = KalmanFilterParallel()

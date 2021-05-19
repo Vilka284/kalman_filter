@@ -1,3 +1,4 @@
+mpi4py==3.0.3
 numpy==1.20.2
 opencv-python==4.5.2.52
 scipy==1.6.3

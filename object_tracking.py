@@ -5,7 +5,7 @@ from os import path
 
 
 def main():
-    video = 'video/video2.mp4'
+    video = 'video/video4.mp4'
 
     if not path.exists(video):
         raise FileNotFoundError('Video does not exist')
