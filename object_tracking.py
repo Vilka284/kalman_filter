@@ -15,20 +15,16 @@ def main():
     tracker = Tracker(60, 30, 100, False)
 
     while True:
-        # Покадрово зчитуємо відео
-        ret, frame = cap.read()
+        try:
+            ret, frame = cap.read()
+            centers = detector.detect(frame)
 
-        # Виявляємо центроїди на зображенні
-        centers = detector.detect(frame)
+            if len(centers) > 0:
+                tracker.update(centers)
 
-        if len(centers) > 0:
-            # Відстежуємо об'єкт з допомогою фільтру Калмана
-            tracker.update(centers)
-
-        # cv2.imshow('Original', orig_frame)
-
-        # Зменшимо кадри в секунду
-        cv2.waitKey(50)
+            cv2.waitKey(50)
+        except cv2.error:
+            break
 
     cap.release()
     cv2.destroyAllWindows()

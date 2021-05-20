@@ -26,8 +26,6 @@ def main():
                 # Відстежуємо об'єкт з допомогою фільтру Калмана
                 tracker.update(centers)
 
-            # cv2.imshow('Original', orig_frame)
-
             cv2.waitKey(50)
         except cv2.error:
             break

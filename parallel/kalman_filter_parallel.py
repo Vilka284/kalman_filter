@@ -1,12 +1,15 @@
 import numpy as np
-from multiprocessing import Pool
+from multiprocessing import Pool, Process
 from exec import func_time
+
+
+def dot(args):
+    return np.dot(args[0], args[1])
 
 
 class KalmanFilterParallel(object):
 
     def __init__(self):
-        self.pool = Pool(processes=4)
         self.dt = 0.005
         self.A = np.array([[1, 0], [0, 1]])
         self.u = np.zeros((2, 1))
@@ -19,6 +22,7 @@ class KalmanFilterParallel(object):
 
     @func_time
     def predict(self):
+        #_ = Process(target=dot, args=[self.F, self.u])
         self.u = np.round(np.dot(self.F, self.u))
         self.P = np.dot(self.F, np.dot(self.P, self.F.T)) + self.Q
         self.lastResult = self.u
